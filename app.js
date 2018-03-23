@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Sorted Set Lab
 // By: Jonathan Lafleur, Michael Macari and Anthony Rusignuolo
 
@@ -23,20 +22,24 @@ class SortedSet {
     }
 
     add(value, node = this.root){
-        if(!node) {
-            node = new Node(value);
-            console.log("Just added",value,"to the set.\n");
+        if(node === this.root && !node) {
+            this.root = new Node(value); 
             return;
         }
 
+        if(!node) {
+            return new Node(value);
+        }
+
         if(value < node.data) {
-            let leftChild = add(value, node.left);
+            let leftChild = this.add(value, node.left);
             node.left = leftChild;
         }
         else if(value > node.data) {
-            let rightChild = add(value, node.right);
+            let rightChild = this.add(value, node.right);
             node.right = rightChild;
         }
+        return node;
     }
     remove(value){}
     contains(value){}
@@ -89,8 +92,3 @@ function main() {
 }
 
 main();
-=======
-//Anthony Rusignuolo, Michael Macari, Jon Lafleur
-//Sorted SetLab
-
->>>>>>> c25a56aacb3db5b8fb9f04bbd30547bcc492cd63
