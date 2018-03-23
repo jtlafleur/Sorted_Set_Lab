@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Sorted Set Lab
 // By: Jonathan Lafleur, Michael Macari and Anthony Rusignuolo
 
@@ -88,3 +89,8 @@ function main() {
 }
 
 main();
+=======
+//Anthony Rusignuolo, Michael Macari, Jon Lafleur
+//Sorted SetLab
+
+>>>>>>> c25a56aacb3db5b8fb9f04bbd30547bcc492cd63
