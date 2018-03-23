@@ -5,7 +5,7 @@ var fs = require("fs");
 var prompt = require("prompt-sync")();
 
 class Node {
-    constructor(data){
+    constructor(data) {
         this.data = data;
         this.left = null;
         this.right = null;
@@ -13,36 +13,80 @@ class Node {
 }
 
 class SortedSet {
-    constructor(){
+    constructor() {
         this.root = null;
     }
 
-    isEmpty(){
+    isEmpty() {
         return this.root === null;
     }
 
-    add(value, node = this.root){
-        if(node === this.root && !node) {
-            this.root = new Node(value); 
+    add(value, node = this.root) {
+        if (node === this.root && this.isEmpty()) {
+            this.root = new Node(value);
             return;
         }
 
-        if(!node) {
+        if (!node)
             return new Node(value);
-        }
 
-        if(value < node.data) {
+        if (value < node.data) {
             let leftChild = this.add(value, node.left);
             node.left = leftChild;
         }
-        else if(value > node.data) {
+        else if (value > node.data) {
             let rightChild = this.add(value, node.right);
             node.right = rightChild;
         }
         return node;
     }
-    remove(value){}
-    contains(value){}
+
+    remove(value, node = this.root) {
+        if (!node) {
+            return;
+        }
+        if (value < node.data) {
+            node.left = this.remove(value, node.left);
+        }
+        else if (value > node.data) {
+            node.right = this.remove(value, node.right);
+        }
+        else {
+            if (!node.left)
+                return node.right;
+            if (!node.right)
+                return node.left;
+
+            node.data = this.maxVal(node.left);
+            node.left = this.remove(node.data, node.left);
+        }
+        return node;
+    }
+
+    maxVal(node = this.root) {
+        let maxV = node.data;
+        while (node.right) {
+            node = node.right;
+            maxV = node.data;
+        }
+        return maxV;
+    }
+
+    contains(value, node = this.root) {
+        if (node === this.root && this.isEmpty()) {
+            console.log("The sorted set contains nothing");
+        }
+
+        if (!node)
+            return false;
+
+        if (node.data === value)
+            return true;
+        else if (value < node.data)
+            return this.contains(value, node.left);
+        else
+            return this.contains(value, node.right);
+    }
 }
 
 
@@ -58,37 +102,41 @@ function readIn() {
 function main() {
     //Read numbers in from infile.dat
     let numbers = readIn();
-    if(numbers === "infile.dat doesn't exist") {
+    if (numbers === "infile.dat doesn't exist") {
         console.log(numbers);
         return;
     }
 
-    console.log(numbers);
     //Create Sorted Set
     let sorted_set = new SortedSet();
+
     //Insert all numbers into the sorted set
-    for(var i=0; i<numbers.length; i++) { 
-        numbers[i] = +numbers[i];
-        sorted_set.add(numbers[i]);
-    }
+    numbers.forEach(function (element) {
+        if (/^\d+(\.\d+)?$/.test(element)) {
+            sorted_set.add(Number(element));
+        }
+    });
 
-    console.log(numbers);
-    console.log(sorted_set);
+    //Prompt user for a value and search the tree to determine if the value is found
+    console.log("Enter anything that is not a number to exit.");
+    do {
+        let user_input = prompt("Enter a value to see if the file contains it: ");
+        if (/^\d+(\.\d+)?$/.test(user_input))
+            user_input = Number(user_input);
+        else {
+            console.log("Exiting the program.");
+            return;
+        }
 
- /*    //Prompt user for a value and search the tree to determine if the value is found
-    let user_input = prompt("Enter a value to see if the file contains it: ");
-    if(/^\d+(\.\d+)?$/.test(user_input)) {
-        user_input = Number(user_input);
-    }
-    else {
-        console.log("Your input is not a number");
-        return;
-    } 
+        if (sorted_set.contains(user_input))
+            console.log("Yes");
+        else
+            console.log("No");
+    } while (true)
 
-    if(sorted_set.contains(user_input)) 
-        console.log("Yes");
-    else 
-        console.log("No");*/
+    numbers.forEach(function (element) {
+        sorted_set.remove(element);
+    });
 }
 
 main();
