@@ -112,8 +112,9 @@ function main() {
 
     //Insert all numbers into the sorted set
     numbers.forEach(function (element) {
-        if (/^\d+(\.\d+)?$/.test(element)) {
-            sorted_set.add(Number(element));
+        element = parseFloat(element);
+        if (!isNaN(element)) {
+            sorted_set.add(element);
         }
     });
 
@@ -121,9 +122,8 @@ function main() {
     console.log("Enter anything that is not a number to exit.");
     do {
         let user_input = prompt("Enter a value to see if the file contains it: ");
-        if (/^\d+(\.\d+)?$/.test(user_input))
-            user_input = Number(user_input);
-        else {
+        user_input = parseFloat(user_input);
+        if (isNaN(user_input)) {
             console.log("Exiting the program.");
             return;
         }
